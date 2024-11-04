@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Customer Form</title>
+</head>
+<body>
+<h1>Customer Form</h1>
+
+<!-- Form untuk menambahkan/mengedit customer -->
+<form th:action="@{/customer/save}" th:object="${customer}" method="post">
+
+    <!-- Input untuk nama customer -->
+    <label>Customer Name:</label>
+    <input type="text" th:field="*{name}" placeholder="Customer Name" required>
+    <br>
+
+    <!-- Input untuk email customer -->
+    <label>Customer Email:</label>
+    <input type="email" th:field="*{email}" placeholder="Customer Email" required>
+    <br>
+
+    <!-- Submit button -->
+    <button type="submit">Save Customer</button>
+</form>
+</body>
+</html>
+

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book Form</title>
+</head>
+<body>
+<form th:action="@{/book/save}" method="post">
+    <input type="hidden"
+           th:field="*{book.id}">
+    <div>
+        <label>Name:</label>
+        <input type="text"
+               th:field="*{book.name}" placeholder="Book Name" required>
+    </div>
+    <div>
+        <label>Description:</label>
+        <input type="text"
+               th:field="*{book.description}" placeholder="Book Description" required>
+    </div>
+    <div>
+        <label>Price:</label>
+        <input type="number"
+               th:field="*{book.price}" placeholder="Book Price" step="0.01" required>
+    </div>
+    <div>
+        <button type="submit">Save</button>
+    </div>
+</form>
+</body>
+</html>

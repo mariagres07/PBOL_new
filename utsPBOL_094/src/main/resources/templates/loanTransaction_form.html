@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Loan Transaction Form</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: white;
+            text-align: center;
+        }
+
+        body{
+            background-image: url('https://images7.alphacoders.com/136/1365090.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100%;
+            margin: 0;
+        }
+
+        h1 {
+            font-family: Constantia;
+            font-size: 35px;
+            font-weight: bold;
+            color: #a4bcc2;
+            text-shadow: 2px 2px 5px rgb(0, 0, 0); 
+            margin-top: 60px;
+            margin-bottom: 30px;
+        }
+
+        form {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 60px;
+        }
+
+        label {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        select, input {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            width: 90%;
+            max-width: 300px;
+        }
+
+        button {
+            background-color: #557765;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #71a46a;
+        }
+
+    </style>
+</head>
+<body>
+<h1>Loan Transaction Form</h1>
+
+<form th:action="${#strings.isEmpty(loanTransaction.id) ? '/loanTransaction/save' : '/loanTransaction/update/' + loanTransaction.id}"
+      th:object="${loanTransaction}"
+      method="post">
+
+    <input type="hidden" name="_method" th:value="${#strings.isEmpty(loanTransaction.id) ? 'post' : 'put'}"/>
+    <input type="hidden" th:field="*{id}"/>
+
+    <label>Book:</label>
+    <select th:field="*{book}" required>
+        <option th:each="book : ${books}" th:value="${book.id}" th:text="${book.title}"></option>
+    </select>
+    <br>
+
+    <label>Member:</label>
+    <select th:field="*{member}" required>
+        <option th:each="member : ${members}" th:value="${member.id}" th:text="${member.name}"></option>
+    </select>
+    <br>
+
+    <label>Borrow Date :</label>
+    <input type="date" th:field="*{borrowDate}" required>
+    <br>
+
+    <label>Return Date :</label>
+    <input type="date" th:field="*{returnDate}" required>
+    <br>
+
+    <button type="submit" th:text="${#strings.isEmpty(loanTransaction.id) ? 'Save LoanTransaction' : 'Update LoanTransaction'}">Save LoanTransaction</button>
+
+</form>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Product Management</h1>
+<!-- Form to Add Product -->
+<h2>Add Product</h2>
+<form id="addProductForm">
+    <label for="productName">Name:</label>
+    <input type="text" id="productName" name="name" required>
+    <label for="productPrice">Price:</label>
+    <input type="number" id="productPrice" name="price" required>
+    <button type="submit">Add Product</button>
+</form>
+<!-- Table to Display Products -->
+<h2>Product List</h2>
+<table id="productTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Rows will be added dynamically -->
+    </tbody>
+</table>
+<!-- JavaScript to handle API calls and dynamic content -->
+<script>
+    const apiUrl = 'http://localhost:8081/products'; // url yang akan digunakan
+    // Function to fetch and display all products
+    function loadProducts() {
+        fetch(apiUrl) // mengambil data dari apiUrl
+            .then(response => response.json()) // mengubah format respons menjadi bentuk json
+            .then(products => { // memproses data produk yang ada
+                const productTableBody = document.getElementById('productTable').querySelector('tbody');
+                productTableBody.innerHTML = ''; // Clear existing rows
+                products.forEach(product => { // menambahkan setiap product ke dalam tabel
+                    const row = document.createElement('tr'); // membuat baris baru
+                    row.innerHTML = `
+                                <td>${product.id}</td>//membuat kolom id, nama, price
+                                <td>${product.name}</td>
+                                <td>${product.price}</td>
+                                <td>
+<button onclick="deleteProduct(${product.id})">Delete</button> // membuat tombol delete
+<button onclick="updateProduct(${product.id}, '${product.name}', ${product.price})">Update</button> // membuat tombol untuk mengupdate product baru
+</td>
+`;
+                    productTableBody.appendChild(row); // menambahkan baris ke tabel
+                });
+            })
+            // menangani kesalahan saat pengambilan data
+            .catch(error => console.error('Error fetching products:', error));
+    }
+    // Function to add a new product
+    document.getElementById('addProductForm').addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent form from submitting the traditional way
+        const productName = document.getElementById('productName').value; // mendapatkan nama product
+        const productPrice = document.getElementById('productPrice').value; // mendapatkan harga product
+        const product = {
+            name: productName, // data productName disimpan ke objek name
+            price: parseFloat(productPrice) // data productPrice disimpan ke objek price dalam bentuk float
+        };
+        fetch(apiUrl, {
+            method: 'POST', // menambahkan data
+            headers: {
+                'Content-Type': 'application/json' // mengirim dalam format json
+            },
+            body: JSON.stringify(product)
+        })
+            .then(response => response.json()) // mengubah format respons menjadi bentuk json
+            .then(newProduct => {
+                console.log('Product added:', newProduct); // menampilkan produk yang telah ditambahkan
+                loadProducts(); // Reload the product list
+            })
+            // menangani kesalahan saat menambahkan data
+            .catch(error => console.error('Error adding product:', error));
+// Clear form fields
+        document.getElementById('productName').value = '';
+        document.getElementById('productPrice').value = '';
+    });
+    // Function to delete a product by ID
+    function deleteProduct(id) {
+        fetch(`${apiUrl}/${id}`, {
+            method: 'DELETE' // menghapus data
+        })
+            .then(() => {
+                console.log('Product deleted:', id); //menampilkan produk yang telah dihapus
+                loadProducts(); // Reload the product list
+            })
+            // menangani kesalahan saat penghapusan data
+            .catch(error => console.error('Error deleting product:', error));
+    }
+    // Function to update a product
+    function updateProduct(id, name, price) {
+        const updatedName = prompt('Enter new name:', name); // menyimpan inputan nama ke dalam updatedName
+        const updatedPrice = prompt('Enter new price:', price); // menyimpan inputan price ke dalam updatedPrice
+        if (updatedName !== null && updatedPrice !== null) {
+            const updatedProduct = {
+                name: updatedName, //menyimpan updatedName ke objek name
+                price: parseFloat(updatedPrice) // mengubah updatedPrice ke bentuk float dan disimpan ke objek price
+            };
+            fetch(`${apiUrl}/${id}`, {
+                method: 'PUT', // meng-update product
+                headers: {
+                    'Content-Type': 'application/json' // mengirim dalam format json
+                },
+                body: JSON.stringify(updatedProduct) // mengubah updatedProduct ke dalam format json
+            })
+                .then(response => response.json()) //mengubah format respons menjadi bentuk json
+                .then(updatedProduct => {
+                    console.log('Product updated:', updatedProduct); //menampilkan produk yang telah diperbarui
+                    loadProducts(); // Reload the product list
+                })
+                // menangani kesalahan saat meng-update data
+                .catch(error => console.error('Error updating product:', error));
+        }
+    }
+    // Load products on page load
+    loadProducts();
+</script>
+</body>
+</html>
+

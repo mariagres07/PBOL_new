@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Form</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: white;
+            text-align: center;
+        }
+
+        body{
+            background-image: url('https://images7.alphacoders.com/136/1365090.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100%;
+            margin: 0;
+        }
+
+        h1 {
+            font-family: Constantia;
+            font-size: 35px;
+            font-weight: bold;
+            color: #a4bcc2;
+            text-shadow: 2px 2px 5px rgb(0, 0, 0);
+            margin-top: 60px;
+            margin-bottom: 30px;
+        }
+
+        form {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 60px;
+        }
+
+        label {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        select, input {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            width: 90%;
+            max-width: 300px;
+        }
+
+        button {
+            background-color: #557765;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #71a46a;
+        }
+
+    </style>
+</head>
+<body>
+<h1>Book Form</h1>
+
+<form th:action="${#strings.isEmpty(book.id) ? '/book/save' : '/book/update/' + book.id}"
+      th:object="${book}"
+      method="post">
+
+    <input type="hidden" name="_method" th:value="${#strings.isEmpty(book.id) ? 'post' : 'put'}"/>
+    <input type="hidden" th:field="*{id}"/>
+
+    <label>Title :</label>
+    <input type="text" th:field="*{title}" placeholder="Book Title" required>
+    <br>
+
+    <label>Author :</label>
+    <input type="text" th:field="*{author}" placeholder="Author" required>
+    <br>
+
+    <label>ISBN :</label>
+    <input type="text" th:field="*{isbn}" placeholder="ISBN" required>
+    <br>
+
+    <button type="submit" th:text="${#strings.isEmpty(book.id) ? 'Save Book' : 'Update Book'}">Save Book</button>
+
+</form>
+</body>
+</html>

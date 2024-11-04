@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Order Form</title>
+</head>
+<body>
+<h1>Order Form</h1>
+
+<!-- Form untuk menambahkan/mengedit produk -->
+<form th:action="@{/order/save}" th:object="${order}" method="post">
+
+    <!-- Input untuk ID produk (hidden) -->
+    <input type="hidden" th:field="*{id}">
+
+    <!--     Input untuk ID customer -->
+    <label>Customer ID :</label>
+    <input type="text" th:field="*{customer}" placeholder="Customer ID" required>
+    <br>
+
+    <!--     Input untuk ID produk -->
+    <label>ID Product:</label>
+    <input type="text" th:field="*{product}" placeholder="Product ID" required>
+    <br>
+
+    <!-- Input untuk jumlah produk -->
+    <label>Quantity:</label>
+    <input type="text" th:field="*{quantity}" placeholder="Quantity" required>
+    <br>
+
+    <!-- Submit button -->
+    <button type="submit">Save Order</button>
+</form>
+</body>
+</html>
+
+
+
